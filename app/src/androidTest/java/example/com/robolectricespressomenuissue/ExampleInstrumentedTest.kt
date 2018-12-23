@@ -1,12 +1,15 @@
 package example.com.robolectricespressomenuissue
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.runner.AndroidJUnit4
-
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.ActivityTestRule
+import org.hamcrest.Matchers.allOf
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -15,10 +18,14 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    @get:Rule
+    val activityTestRule = ActivityTestRule<MainActivity>(MainActivity::class.java, false, true)
+
     @Test
-    fun useAppContext() {
+    fun testOpenMenuItem() {
         // Context of the app under test.
-        val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("example.com.robolectricespressomenuissue", appContext.packageName)
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        Espresso.openActionBarOverflowOrOptionsMenu(appContext)
+        Espresso.onView(allOf(withId(R.id.title), withText(R.string.action_settings), isDisplayed())).perform(click());
     }
 }
